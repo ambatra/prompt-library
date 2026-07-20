@@ -66,12 +66,14 @@
 </header>
 <main id="board"><div class="empty">Loading prompts…</div></main>
 
+<script src="data.js"></script>
 <script>
 let DATA=null, activeTags=new Set(), query="";
 const board=document.getElementById('board'), tagbar=document.getElementById('tagbar');
 
-fetch('prompts.json').then(r=>r.json()).then(d=>{DATA=d;init();})
-  .catch(e=>{board.innerHTML='<div class="empty">Could not load prompts.json — '+e+'</div>';});
+if(window.PROMPTS_DATA){DATA=window.PROMPTS_DATA;init();}
+else{fetch('prompts.json').then(r=>r.json()).then(d=>{DATA=d;init();})
+  .catch(e=>{board.innerHTML='<div class="empty">Could not load prompts — '+e+'</div>';});}
 
 function init(){
   document.getElementById('sub').textContent=DATA.count+' prompts';

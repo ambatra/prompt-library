@@ -78,6 +78,11 @@ for title, body in blocks:
 COLS = [c for c, _ in CATEGORY_RULES] + ["Other"]
 data = {"columns": COLS, "count": len(items), "prompts": items}
 json.dump(data, open("prompts.json", "w", encoding="utf-8"), ensure_ascii=False)
+# also emit data.js so index.html works offline via double-click (file:// blocks fetch)
+with open("data.js", "w", encoding="utf-8") as f:
+    f.write("window.PROMPTS_DATA=")
+    json.dump(data, f, ensure_ascii=False)
+    f.write(";")
 
 from collections import Counter
 print("total cards:", len(items))
