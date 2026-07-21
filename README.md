@@ -1,62 +1,59 @@
 # Prompt Library
 
-A private, curated library of **2,247 reusable AI prompts** — text prompts *and* visual style prompts — kept for easy access, search, and continuous improvement.
+> **⚠️ Disclaimer:** This is a **personal clone and aggregation** of prompts collected from various open-source repositories and community resources. **I do not claim ownership of any of the prompts** in this collection. All credit belongs to the original creators and communities listed below.
 
-## 🖥️ Live Board
+A personal, searchable collection of AI prompts — aggregated from open-source prompt libraries, restructured for easy retrieval via a Kanban-style board.
 
-**→ [Browse the Kanban board](https://ambatra.github.io/prompt-library/)**
+## 🙏 Credits & Sources
 
-A self-contained dark-mode Kanban board with:
-- **Kanban & Grid views** — toggle between column layout and card grid
-- **Text / Image / All filters** — switch between 2,148 text prompts and 99 visual style prompts
-- **Live search** across titles, prompt text, tags, and categories
-- **Tag chips** — click to filter; supports multi-tag intersection
-- **Copy button** on every card — one click to clipboard
-- **Image cards** — visual prompt styles show a 16:9 thumbnail preview
-- **Expand modal** — click an image to see the full prompt, preview, and tags
+This library is built entirely from the work of others. Full attribution below:
 
-## Collections
+| Source | Creator | What was used | License |
+|--------|---------|---------------|---------|
+| [AI Visual Prompt Cookbook](https://github.com/VigoZhao/AI-Visual-Prompt-Cookbook) | [@VigoCreativeAI](https://x.com/VigoCreativeAI) | 99 structured visual/image prompt styles with preview images | MIT |
+| Community prompt collections | Various contributors | ~2,148 text prompts across coding, writing, business, and more | Various / Public |
 
-| Collection | Count | Source |
-|-----------|-------|--------|
-| 📝 Text Prompts | 2,148 | Curated from various prompt engineering resources |
-| 🎨 Image Prompts | 99 | [AI Visual Prompt Cookbook](https://github.com/VigoZhao/AI-Visual-Prompt-Cookbook) |
+> If you are the creator of any prompt included here and would like it removed or attributed differently, please [open an issue](https://github.com/ambatra/prompt-library/issues).
 
-### Image Prompt Categories
+## What This Repo Does
 
-| Category | Styles | Description |
-|----------|--------|-------------|
-| 🎨 Manga & Comic | 24 | Anime, manga dossiers, comic halftone, ink styles |
-| 🎨 Doodle & Hand-Drawn | 24 | Marker, crayon, scribble, sketch, naive styles |
-| 🎨 Editorial & Fashion | 22 | Luxury editorial, portraits, architectural, analog |
-| 🎨 Street & Grunge | 12 | Y2K, streetwear, graffiti, zine, skate punk |
-| 🎨 Product & Advertising | 7 | Food ads, product shots, beverage splash, sneaker tech |
-| 🎨 Photo Collage & Lifestyle | 6 | Travel diaries, mascots, 3D avatars, photo overlays |
-| 🎨 Bold Typography | 4 | Megatype, kinetic type, perspective lettering |
+- **Aggregates** prompts from multiple open-source repos into one place
+- **Restructures** them into searchable, categorized cards
+- **Adds a Kanban board** (`index.html`) for visual browsing with search, tags, and copy-to-clipboard
+- **Does not modify** the original prompts — only reorganizes and presents them
+
+## 🖥️ Kanban Board
+
+Open **`index.html`** or browse live at **[ambatra.github.io/prompt-library](https://ambatra.github.io/prompt-library/)** (if GitHub Pages is enabled):
+
+- **2,247 prompts** — 2,148 text + 99 visual styles
+- Kanban columns grouped by category
+- 🎨 Image prompt cards show thumbnail previews
+- Live search across titles, prompt text, and tags
+- Click any tag chip to filter; click a card to expand
+- **Copy** button on every card
+- Toggle between Kanban and Grid views
+- Filter by Text / Image / All
 
 ## Files
 
 | File | Purpose |
 |------|---------|
 | `index.html` | Kanban board viewer (self-contained, dark mode) |
-| `prompts.json` | All prompts as structured JSON (title, prompt, category, tags, image) |
-| `data.js` | Same data as JS module for offline/local use |
-| `PROMPTS.md` | Original text prompts in markdown |
-| `images/` | 99 thumbnail previews for visual styles |
+| `prompts.json` | All prompts as structured JSON |
+| `data.js` | Same data as JS module for offline use |
+| `PROMPTS.md` | Text prompts in markdown (source of truth) |
+| `images/` | 99 thumbnail previews for visual styles (from AI Visual Prompt Cookbook) |
 | `build.py` | Regenerate text prompts from `PROMPTS.md` |
 | `build_image_prompts.py` | Merge image prompts from AI Visual Prompt Cookbook |
 
-## How to Add Prompts
+## License
 
-### Text prompts
-1. Edit `PROMPTS.md` (follow the existing `<details>` pattern)
-2. Run `python3 build.py` to refresh `prompts.json`
+This repo itself is for personal use. Individual prompts retain the licenses of their original sources:
 
-### Image prompt sources
-1. Clone the source repo
-2. Update `build_image_prompts.py` with new source paths
-3. Run `python3 build_image_prompts.py` to merge
+- **AI Visual Prompt Cookbook** — [MIT License](https://github.com/VigoZhao/AI-Visual-Prompt-Cookbook/blob/main/LICENSE)
+- **Text prompts** — sourced from publicly available community collections
 
-## Attribution
+---
 
-- [AI Visual Prompt Cookbook](https://github.com/VigoZhao/AI-Visual-Prompt-Cookbook) by [@VigoCreativeAI](https://x.com/VigoCreativeAI) — MIT License
+*This is a living collection. New prompt sources will be added and credited over time.*
