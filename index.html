@@ -4,154 +4,159 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prompt Library — Kanban</title>
-<meta name="description" content="A curated library of 2200+ reusable AI prompts — text, code, and visual styles — in a searchable Kanban board.">
+<meta name="description" content="2,247 AI prompts — text, code, and visual styles — in a searchable Kanban board with 36 clusters and 230+ tags.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1117; --panel:#161b22; --card:#1c2129; --card-hover:#222a35;
-    --ink:#e6edf3; --muted:#8b949e; --dim:#484f58;
-    --line:#21262d; --accent:#7c3aed; --accent2:#a78bfa;
-    --chip:#1e1b4b; --chip-ink:#c4b5fd;
-    --green:#22c55e; --green-bg:#052e16; --green-ink:#86efac;
-    --orange:#f59e0b; --orange-bg:#451a03; --orange-ink:#fcd34d;
-    --img-col:#2d1b69;
-    --shadow:0 2px 8px rgba(0,0,0,.35);
-    --radius:12px;
+    --bg:#0e1117;--panel:#161b22;--card:#1c2129;--card-hover:#222a35;
+    --ink:#e6edf3;--muted:#8b949e;--dim:#484f58;
+    --line:#21262d;--accent:#7c3aed;--accent2:#a78bfa;
+    --chip:#1e1b4b;--chip-ink:#c4b5fd;
+    --green:#22c55e;--green-bg:#052e16;
+    --shadow:0 2px 8px rgba(0,0,0,.35);--radius:12px;
     --font:'Inter',system-ui,-apple-system,sans-serif;
+    --sidebar-w:220px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font:14px/1.55 var(--font);background:var(--bg);color:var(--ink);overflow-x:hidden}
 
+  /* === Layout === */
+  .app{display:flex;height:100vh;overflow:hidden}
+
+  /* === Sidebar === */
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;overflow:hidden;transition:width .2s}
+  .sidebar.collapsed{width:48px}
+  .sidebar-head{padding:14px 14px 8px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+  .sidebar-head h2{font-size:13px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+    background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sidebar.collapsed .sidebar-head h2,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-count{display:none}
+  .sidebar-toggle{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;
+    margin-left:auto;padding:4px;border-radius:6px;transition:all .15s}
+  .sidebar-toggle:hover{color:var(--ink);background:var(--card)}
+  .nav-list{flex:1;overflow-y:auto;padding:8px 6px}
+  .nav-group{margin-bottom:12px}
+  .nav-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--dim);padding:4px 8px;margin-bottom:2px}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;
+    cursor:pointer;transition:all .12s;font-size:12px;color:var(--muted);text-decoration:none}
+  .nav-item:hover{background:var(--card);color:var(--ink)}
+  .nav-item.active{background:rgba(124,58,237,.15);color:var(--accent2);font-weight:600}
+  .nav-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-count{font-size:10px;font-weight:600;color:var(--dim);background:var(--card);
+    padding:1px 6px;border-radius:999px;min-width:20px;text-align:center}
+  .nav-item.active .nav-count{background:rgba(124,58,237,.25);color:var(--accent2)}
+  .sidebar.collapsed .nav-item{justify-content:center;padding:8px 4px}
+  .sidebar.collapsed .nav-item .nav-emoji{font-size:16px}
+
+  /* === Main area === */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
   /* === Header === */
   header{position:sticky;top:0;z-index:20;background:rgba(14,17,23,.92);
-    backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid var(--line);
-    padding:16px 20px 12px}
-  .head-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-  h1{font-size:20px;font-weight:800;letter-spacing:-.03em;
-    background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 50%,#c084fc 100%);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;
-    background:var(--accent);color:#fff;letter-spacing:.02em}
-  #q{flex:1;min-width:240px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;
-    background:var(--card);color:var(--ink);font:14px var(--font);transition:all .2s}
+    backdrop-filter:blur(16px) saturate(1.4);border-bottom:1px solid var(--line);padding:12px 18px 10px}
+  .head-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  h1{font-size:18px;font-weight:800;letter-spacing:-.03em;
+    background:linear-gradient(135deg,#a78bfa,#7c3aed,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent);color:#fff}
+  #q{flex:1;min-width:200px;padding:9px 13px;border:1px solid var(--line);border-radius:10px;
+    background:var(--card);color:var(--ink);font:13px var(--font);transition:all .2s}
   #q:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.25)}
   #q::placeholder{color:var(--dim)}
-  .count{color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap}
-
-  /* === View toggle === */
+  .count{color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap}
   .view-toggle{display:flex;gap:2px;background:var(--panel);border-radius:8px;border:1px solid var(--line);padding:2px}
-  .view-btn{border:none;background:transparent;color:var(--muted);padding:6px 14px;
-    font:12px/1 var(--font);font-weight:600;border-radius:6px;cursor:pointer;transition:all .2s}
+  .view-btn{border:none;background:transparent;color:var(--muted);padding:5px 12px;
+    font:11px/1 var(--font);font-weight:600;border-radius:6px;cursor:pointer;transition:all .2s}
   .view-btn.active{background:var(--accent);color:#fff}
   .view-btn:hover:not(.active){color:var(--ink)}
-
-  /* === Mode tabs (Text / Image / All) === */
-  .mode-tabs{display:flex;gap:6px;margin-top:10px}
+  .mode-tabs{display:flex;gap:5px;margin-top:8px}
   .mode-btn{border:1px solid var(--line);background:transparent;color:var(--muted);
-    padding:5px 14px;border-radius:999px;font:12px/1 var(--font);font-weight:600;
+    padding:4px 12px;border-radius:999px;font:11px/1 var(--font);font-weight:600;
     cursor:pointer;transition:all .2s}
   .mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
   .mode-btn:hover:not(.active){color:var(--ink);border-color:var(--dim)}
-  .mode-btn .cnt{opacity:.6;font-weight:400;margin-left:4px}
-
-  /* === Tag bar === */
-  .tagbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;max-height:72px;overflow:auto}
+  .mode-btn .cnt{opacity:.6;font-weight:400;margin-left:3px}
+  .tagbar{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;max-height:56px;overflow:auto}
   .tag{border:1px solid var(--line);background:var(--chip);color:var(--chip-ink);
-    padding:3px 10px;border-radius:999px;font-size:11px;font-weight:500;
+    padding:2px 9px;border-radius:999px;font-size:10px;font-weight:500;
     cursor:pointer;user-select:none;transition:all .15s}
   .tag:hover{border-color:var(--accent2)}
   .tag.on{background:var(--accent);color:#fff;border-color:transparent}
-  .clear{color:var(--muted);cursor:pointer;font-size:11px;padding:3px 6px;
-    text-decoration:underline;font-weight:500}
+  .clear{color:var(--muted);cursor:pointer;font-size:10px;padding:2px 5px;text-decoration:underline;font-weight:500}
 
-  /* === Board (Kanban) === */
-  main.kanban{display:flex;gap:14px;padding:16px;overflow-x:auto;align-items:flex-start;min-height:calc(100vh - 170px)}
-  .col{flex:0 0 340px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  /* === Board === */
+  .board-wrap{flex:1;overflow:auto}
+  main.kanban{display:flex;gap:12px;padding:14px;align-items:flex-start;min-height:calc(100vh - 170px)}
+  .col{flex:0 0 320px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
     display:flex;flex-direction:column;max-height:calc(100vh - 170px)}
   .col.hide{display:none}
-  .col.img-col{border-color:rgba(124,58,237,.2)}
-  .col h2{margin:0;padding:12px 14px;font-size:12px;font-weight:700;letter-spacing:.03em;
+  .col.img-col{border-color:rgba(124,58,237,.18)}
+  .col h2{margin:0;padding:10px 12px;font-size:11px;font-weight:700;letter-spacing:.03em;
     text-transform:uppercase;position:sticky;top:0;background:var(--panel);
     border-bottom:1px solid var(--line);border-radius:var(--radius) var(--radius) 0 0;
-    display:flex;justify-content:space-between;align-items:center;gap:8px}
+    display:flex;justify-content:space-between;align-items:center;gap:6px}
   .col.img-col h2{color:var(--accent2)}
-  .col h2 b{color:var(--dim);font-weight:600;font-size:11px;
-    background:var(--card);padding:2px 8px;border-radius:999px}
-  .stack{padding:10px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
-
-  /* === Card (text) === */
+  .col h2 b{color:var(--dim);font-weight:600;font-size:10px;background:var(--card);padding:2px 7px;border-radius:999px}
+  .stack{padding:8px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
   .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:12px;box-shadow:var(--shadow);transition:all .2s;cursor:default}
+    padding:10px 11px;box-shadow:var(--shadow);transition:all .2s;cursor:default}
   .card:hover{background:var(--card-hover);border-color:var(--dim)}
   .card.hide{display:none}
-  .card .t{font-weight:650;font-size:13px;margin-bottom:6px;
-    display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card .t{font-weight:650;font-size:12.5px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
   .card .t span{flex:1}
   .copy{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:6px;
-    font:11px/1 var(--font);font-weight:600;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:all .15s}
+    font:10px/1 var(--font);font-weight:600;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .15s}
   .copy:hover{color:var(--accent2);border-color:var(--accent)}
   .copy.done{color:var(--green);border-color:var(--green)}
-  .card .body{color:var(--muted);font-size:12.5px;max-height:4.8em;overflow:hidden;
-    cursor:pointer;white-space:pre-wrap;line-height:1.55;transition:max-height .3s ease}
+  .card .body{color:var(--muted);font-size:12px;max-height:4em;overflow:hidden;
+    cursor:pointer;white-space:pre-wrap;line-height:1.5;transition:max-height .3s ease}
   .card .body.open{max-height:2000px}
-  .card .tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
-  .card .tags span{background:var(--chip);color:var(--chip-ink);font-size:10px;font-weight:500;
-    padding:2px 8px;border-radius:999px;cursor:pointer;transition:all .15s}
+  .card .tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:3px}
+  .card .tags span{background:var(--chip);color:var(--chip-ink);font-size:9px;font-weight:500;
+    padding:2px 7px;border-radius:999px;cursor:pointer;transition:all .15s}
   .card .tags span:hover{background:var(--accent);color:#fff}
-
-  /* === Card (image) === */
   .card.img-card{padding:0;overflow:hidden}
-  .card.img-card .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
-    border-bottom:1px solid var(--line)}
-  .card.img-card .content{padding:10px 12px}
-  .card.img-card .t{margin-bottom:4px}
-  .card.img-card .summary{color:var(--muted);font-size:11.5px;line-height:1.5;
-    margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card.img-card .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
+  .card.img-card .content{padding:8px 10px}
+  .card.img-card .t{margin-bottom:3px}
+  .card.img-card .summary{color:var(--muted);font-size:11px;line-height:1.45;margin-bottom:5px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-  /* === Board (Grid) === */
-  main.grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:14px;padding:16px;align-items:start}
+  /* Grid view */
+  main.grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:14px;align-items:start}
   main.grid-view .col{display:none}
-  main.grid-view .card{break-inside:avoid}
   main.grid-view .card.hide{display:none}
 
-  /* === Empty state === */
-  .empty{padding:60px 20px;text-align:center;color:var(--muted);font-size:15px;grid-column:1/-1}
-
-  /* === Modal overlay for expanded prompt === */
+  /* Modal */
   .modal-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);
     backdrop-filter:blur(4px);justify-content:center;align-items:center;padding:20px}
   .modal-overlay.show{display:flex}
   .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    max-width:720px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+    max-width:700px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)}
   .modal-head{display:flex;justify-content:space-between;align-items:center;
-    padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;
+    padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;
     background:var(--panel);border-radius:16px 16px 0 0;z-index:2}
-  .modal-head h3{font-size:16px;font-weight:700}
-  .modal-close{border:none;background:var(--card);color:var(--ink);width:32px;height:32px;
-    border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;
-    justify-content:center;transition:all .15s}
+  .modal-head h3{font-size:15px;font-weight:700}
+  .modal-close{border:none;background:var(--card);color:var(--ink);width:30px;height:30px;
+    border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
   .modal-close:hover{background:var(--accent);color:#fff}
-  .modal-body{padding:20px}
-  .modal-body img{width:100%;border-radius:8px;margin-bottom:16px}
+  .modal-body{padding:18px}
+  .modal-body img{width:100%;border-radius:8px;margin-bottom:14px}
   .modal-body .prompt-block{background:var(--bg);border:1px solid var(--line);
-    border-radius:10px;padding:16px;font-size:13px;line-height:1.65;white-space:pre-wrap;
-    color:var(--ink);max-height:400px;overflow-y:auto;position:relative}
-  .modal-body .prompt-block .copy-big{position:absolute;top:8px;right:8px;
-    padding:6px 14px;border-radius:8px;font-weight:600}
-  .modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+    border-radius:10px;padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;
+    color:var(--ink);max-height:380px;overflow-y:auto;position:relative}
+  .modal-body .prompt-block .copy-big{position:absolute;top:8px;right:8px;padding:5px 12px;border-radius:8px;font-weight:600}
+  .modal-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
 
-  /* === Scrollbar === */
-  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar{width:5px;height:5px}
   ::-webkit-scrollbar-track{background:transparent}
   ::-webkit-scrollbar-thumb{background:var(--dim);border-radius:999px}
-  ::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 
-  /* === Responsive === */
-  @media(max-width:600px){
+  @media(max-width:768px){
+    .sidebar{display:none}
     .col{flex:0 0 85vw}
     main.grid-view{grid-template-columns:1fr}
   }
@@ -159,170 +164,194 @@
 </head>
 <body>
 
-<header>
-  <div class="head-row">
-    <h1>Prompt Library</h1>
-    <span class="badge" id="sub">loading…</span>
-    <input id="q" type="search" placeholder="Search prompts, tags, categories…" autocomplete="off">
-    <span class="count" id="count"></span>
-    <div class="view-toggle">
-      <button class="view-btn active" data-view="kanban" title="Kanban columns">▤ Kanban</button>
-      <button class="view-btn" data-view="grid" title="Card grid">▦ Grid</button>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <h2>Clusters</h2>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">☰</button>
+    </div>
+    <nav class="nav-list" id="navList"></nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header>
+      <div class="head-row">
+        <h1>Prompt Library</h1>
+        <span class="badge" id="sub">loading…</span>
+        <input id="q" type="search" placeholder="Search prompts, tags, clusters…" autocomplete="off">
+        <span class="count" id="count"></span>
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="kanban">▤ Kanban</button>
+          <button class="view-btn" data-view="grid">▦ Grid</button>
+        </div>
+      </div>
+      <div class="mode-tabs" id="modeTabs">
+        <button class="mode-btn active" data-mode="all">All<span class="cnt" id="cntAll"></span></button>
+        <button class="mode-btn" data-mode="text">📝 Text<span class="cnt" id="cntText"></span></button>
+        <button class="mode-btn" data-mode="image">🖼️ Image<span class="cnt" id="cntImg"></span></button>
+      </div>
+      <div class="tagbar" id="tagbar"></div>
+    </header>
+    <div class="board-wrap">
+      <main id="board" class="kanban"><div style="padding:60px;text-align:center;color:var(--muted)">Loading prompts…</div></main>
     </div>
   </div>
-  <div class="mode-tabs" id="modeTabs">
-    <button class="mode-btn active" data-mode="all">All<span class="cnt" id="cntAll"></span></button>
-    <button class="mode-btn" data-mode="text">📝 Text<span class="cnt" id="cntText"></span></button>
-    <button class="mode-btn" data-mode="image">🎨 Image<span class="cnt" id="cntImg"></span></button>
-  </div>
-  <div class="tagbar" id="tagbar"></div>
-</header>
+</div>
 
-<main id="board" class="kanban"><div class="empty">Loading prompts…</div></main>
-
-<!-- Expanded prompt modal -->
+<!-- Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <div class="modal-head">
-      <h3 id="modalTitle"></h3>
-      <button class="modal-close" id="modalClose">✕</button>
-    </div>
+    <div class="modal-head"><h3 id="modalTitle"></h3><button class="modal-close" id="modalClose">✕</button></div>
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
 <script src="data.js"></script>
 <script>
-let DATA=null, activeTags=new Set(), query="", viewMode="kanban", filterMode="all";
-const board=document.getElementById('board'), tagbar=document.getElementById('tagbar');
-const modal=document.getElementById('modal');
+let DATA=null,activeTags=new Set(),query="",viewMode="kanban",filterMode="all",activeCluster=null;
+const board=document.getElementById('board'),tagbar=document.getElementById('tagbar'),
+      modal=document.getElementById('modal'),navList=document.getElementById('navList');
 
-// Load data
 if(window.PROMPTS_DATA){DATA=window.PROMPTS_DATA;init();}
-else{fetch('prompts.json').then(r=>r.json()).then(d=>{DATA=d;init();})
-  .catch(e=>{board.innerHTML='<div class="empty">Could not load prompts — '+e+'</div>';});}
+else{fetch('prompts.json').then(r=>r.json()).then(d=>{DATA=d;init();}).catch(e=>{
+  board.innerHTML='<div style="padding:60px;text-align:center;color:var(--muted)">Error: '+e+'</div>';});}
 
 function init(){
-  // Count text vs image
-  DATA._textCount = DATA.prompts.filter(p=>!p.image).length;
-  DATA._imgCount  = DATA.prompts.filter(p=>p.image).length;
-  document.getElementById('sub').textContent=DATA.count+' prompts';
+  DATA._textCount=DATA.prompts.filter(p=>!p.image).length;
+  DATA._imgCount=DATA.prompts.filter(p=>p.image).length;
+  document.getElementById('sub').textContent=DATA.count+' prompts · '+DATA.columns.length+' clusters';
   document.getElementById('cntAll').textContent=` · ${DATA.count}`;
   document.getElementById('cntText').textContent=` · ${DATA._textCount}`;
   document.getElementById('cntImg').textContent=` · ${DATA._imgCount}`;
 
-  // Build tags
-  const freq={};
-  DATA.prompts.forEach(p=>p.tags.forEach(t=>freq[t]=(freq[t]||0)+1));
-  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,40);
-  const frag=document.createDocumentFragment();
-  const clr=document.createElement('span');clr.className='clear';clr.textContent='clear all';
-  clr.onclick=()=>{activeTags.clear();document.getElementById('q').value='';query='';render();};
-  tagbar.appendChild(clr);
-  top.forEach(([t,n])=>{
-    const el=document.createElement('span');el.className='tag';el.dataset.tag=t;
-    el.textContent=t+' ·'+n;el.onclick=()=>toggleTag(t);frag.appendChild(el);
-  });
-  tagbar.appendChild(frag);
-
+  buildSidebar();
+  buildTags();
   buildBoard();
-  document.getElementById('q').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render();});
 
-  // View toggle
+  document.getElementById('q').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render();});
   document.querySelectorAll('.view-btn').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('.view-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    viewMode=b.dataset.view;
-    applyView();
-  });
-
-  // Mode tabs
+    b.classList.add('active');viewMode=b.dataset.view;applyView();});
   document.querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    filterMode=b.dataset.mode;
-    render();
-  });
-
-  // Modal
+    b.classList.add('active');filterMode=b.dataset.mode;render();});
   document.getElementById('modalClose').onclick=()=>modal.classList.remove('show');
   modal.onclick=e=>{if(e.target===modal)modal.classList.remove('show');};
   document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('show');});
+  document.getElementById('sidebarToggle').onclick=()=>document.getElementById('sidebar').classList.toggle('collapsed');
 
   render();
 }
 
+/* === Sidebar === */
+function buildSidebar(){
+  const catCounts={};
+  DATA.prompts.forEach(p=>catCounts[p.category]=(catCounts[p.category]||0)+1);
+
+  const textCols=DATA.columns.filter(c=>!c.startsWith('🖼️'));
+  const imgCols=DATA.columns.filter(c=>c.startsWith('🖼️'));
+
+  // "All" item
+  const allItem=mk('a','nav-item active');allItem.href='#';
+  allItem.innerHTML='<span class="nav-label">All Clusters</span><span class="nav-count">'+DATA.count+'</span>';
+  allItem.onclick=e=>{e.preventDefault();activeCluster=null;highlightNav(null);render();scrollBoardLeft();};
+  navList.appendChild(allItem);
+
+  // Text group
+  const tg=mk('div','nav-group');
+  tg.innerHTML='<div class="nav-group-title">📝 Text Prompts</div>';
+  textCols.forEach(c=>tg.appendChild(makeNavItem(c,catCounts[c]||0)));
+  navList.appendChild(tg);
+
+  // Image group
+  const ig=mk('div','nav-group');
+  ig.innerHTML='<div class="nav-group-title">🖼️ Image Prompts</div>';
+  imgCols.forEach(c=>ig.appendChild(makeNavItem(c,catCounts[c]||0)));
+  navList.appendChild(ig);
+}
+
+function makeNavItem(col,count){
+  const emoji=col.match(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F?)/u);
+  const label=col.replace(/^[\p{Emoji_Presentation}\p{Emoji}\uFE0F\s]+/u,'');
+  const a=mk('a','nav-item');a.href='#col-'+slugify(col);a.dataset.col=col;
+  a.innerHTML=(emoji?'<span class="nav-emoji">'+emoji[0]+'</span>':'')+
+    '<span class="nav-label">'+esc(label)+'</span><span class="nav-count">'+count+'</span>';
+  a.onclick=e=>{e.preventDefault();activeCluster=col;highlightNav(col);render();
+    const target=document.getElementById('col-'+slugify(col));
+    if(target)target.scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});};
+  return a;
+}
+
+function highlightNav(col){
+  navList.querySelectorAll('.nav-item').forEach(n=>{
+    if(!col)n.classList.toggle('active',!n.dataset.col);
+    else n.classList.toggle('active',n.dataset.col===col);
+  });
+}
+
+function scrollBoardLeft(){board.scrollTo({left:0,behavior:'smooth'});}
+
+/* === Tags === */
+function buildTags(){
+  const freq={};DATA.prompts.forEach(p=>p.tags.forEach(t=>freq[t]=(freq[t]||0)+1));
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,50);
+  const frag=document.createDocumentFragment();
+  const clr=mk('span','clear');clr.textContent='clear all';
+  clr.onclick=()=>{activeTags.clear();document.getElementById('q').value='';query='';activeCluster=null;highlightNav(null);render();};
+  tagbar.appendChild(clr);
+  top.forEach(([t,n])=>{
+    const el=mk('span','tag');el.dataset.tag=t;el.textContent='#'+t+' ·'+n;
+    el.onclick=()=>toggleTag(t);frag.appendChild(el);});
+  tagbar.appendChild(frag);
+}
 function toggleTag(t){activeTags.has(t)?activeTags.delete(t):activeTags.add(t);render();}
 
+/* === Board === */
 function buildBoard(){
-  board.innerHTML='';
-  DATA._cols={};DATA._allCards=[];
-
+  board.innerHTML='';DATA._cols={};DATA._allCards=[];
   DATA.columns.forEach(c=>{
-    const col=document.createElement('section');
-    col.className='col'+(c.startsWith('🎨')?' img-col':'');
-    col.dataset.col=c;
-    col.innerHTML='<h2>'+c+' <b class="cnt">0</b></h2>';
-    const stack=document.createElement('div');stack.className='stack';
-    col.appendChild(stack);
-    board.appendChild(col);
-    DATA._cols[c]={col,stack};
-  });
-
-  DATA.prompts.forEach((p,i)=>{
-    const c=DATA._cols[p.category]||DATA._cols['Other'];
-    if(!c)return;
+    const col=mk('section','col'+(c.startsWith('🖼️')?' img-col':''));
+    col.id='col-'+slugify(c);col.dataset.col=c;
+    col.innerHTML='<h2>'+esc(c)+' <b class="cnt">0</b></h2>';
+    const stack=mk('div','stack');col.appendChild(stack);
+    board.appendChild(col);DATA._cols[c]={col,stack};});
+  DATA.prompts.forEach(p=>{
+    const c=DATA._cols[p.category];if(!c)return;
     const isImg=!!p.image;
-    const card=document.createElement('div');
-    card.className='card'+(isImg?' img-card':'');
-    card._p=p;
-
+    const card=mk('div','card'+(isImg?' img-card':''));card._p=p;card._isImg=isImg;
     if(isImg){
-      const tagsHtml=p.tags.map(t=>'<span data-tag="'+t+'">'+t+'</span>').join('');
-      card.innerHTML=
-        '<img class="thumb" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy">'+
-        '<div class="content">'+
-          '<div class="t"><span>'+esc(p.title)+'</span>'+
-            '<button class="copy">copy</button></div>'+
-          '<div class="summary">'+esc(p.summary||'')+'</div>'+
-          '<div class="tags">'+tagsHtml+'</div>'+
-        '</div>';
-      // Click image to open modal
+      const tagsH=p.tags.map(t=>'<span data-tag="'+t+'">#'+t+'</span>').join('');
+      card.innerHTML='<img class="thumb" src="'+esc(p.image)+'" alt="'+esc(p.title)+'" loading="lazy">'+
+        '<div class="content"><div class="t"><span>'+esc(p.title)+'</span><button class="copy">copy</button></div>'+
+        '<div class="summary">'+esc(p.summary||'')+'</div><div class="tags">'+tagsH+'</div></div>';
       card.querySelector('.thumb').onclick=()=>openModal(p);
-    } else {
-      const tagsHtml=p.tags.map(t=>'<span data-tag="'+t+'">'+t+'</span>').join('');
-      card.innerHTML='<div class="t"><span>'+esc(p.title)+'</span>'+
-        '<button class="copy">copy</button></div><div class="body">'+esc(p.prompt)+
-        '</div><div class="tags">'+tagsHtml+'</div>';
-      card.querySelector('.body').onclick=e=>{
-        if(e.target.classList.contains('body'))e.target.classList.toggle('open');
-      };
+    }else{
+      const tagsH=p.tags.map(t=>'<span data-tag="'+t+'">#'+t+'</span>').join('');
+      card.innerHTML='<div class="t"><span>'+esc(p.title)+'</span><button class="copy">copy</button></div>'+
+        '<div class="body">'+esc(p.prompt)+'</div><div class="tags">'+tagsH+'</div>';
+      card.querySelector('.body').onclick=e=>{if(e.target.classList.contains('body'))e.target.classList.toggle('open');};
     }
-
     card.querySelector('.copy').onclick=ev=>{ev.stopPropagation();
-      navigator.clipboard.writeText(p.prompt);
-      ev.target.textContent='✓ copied';ev.target.classList.add('done');
-      setTimeout(()=>{ev.target.textContent='copy';ev.target.classList.remove('done');},1400);};
+      navigator.clipboard.writeText(p.prompt);ev.target.textContent='✓ copied';ev.target.classList.add('done');
+      setTimeout(()=>{ev.target.textContent='copy';ev.target.classList.remove('done');},1200);};
     card.querySelectorAll('.tags span').forEach(s=>s.onclick=()=>toggleTag(s.dataset.tag));
     card._hay=(p.title+' '+p.prompt+' '+(p.summary||'')+' '+p.tags.join(' ')+' '+p.category).toLowerCase();
-    card._isImg=isImg;
-    c.stack.appendChild(card);
-    DATA._allCards.push(card);
+    c.stack.appendChild(card);DATA._allCards.push(card);
   });
 }
 
 function openModal(p){
   document.getElementById('modalTitle').textContent=p.title;
-  let html='';
-  if(p.image) html+='<img src="'+esc(p.image)+'" alt="'+esc(p.title)+'">';
-  html+='<div class="prompt-block"><button class="copy copy-big" id="modalCopy">📋 Copy Prompt</button>'+esc(p.prompt)+'</div>';
-  if(p.tags.length) html+='<div class="modal-tags">'+p.tags.map(t=>'<span class="tag" style="cursor:default">'+t+'</span>').join('')+'</div>';
-  document.getElementById('modalBody').innerHTML=html;
+  let h='';
+  if(p.image)h+='<img src="'+esc(p.image)+'" alt="'+esc(p.title)+'">';
+  h+='<div class="prompt-block"><button class="copy copy-big" id="modalCopy">📋 Copy Prompt</button>'+esc(p.prompt)+'</div>';
+  if(p.tags.length)h+='<div class="modal-tags">'+p.tags.map(t=>'<span class="tag" style="cursor:default">#'+t+'</span>').join('')+'</div>';
+  document.getElementById('modalBody').innerHTML=h;
   document.getElementById('modalCopy').onclick=()=>{
-    navigator.clipboard.writeText(p.prompt);
-    document.getElementById('modalCopy').textContent='✓ Copied!';
-    setTimeout(()=>document.getElementById('modalCopy').textContent='📋 Copy Prompt',1400);
-  };
+    navigator.clipboard.writeText(p.prompt);const b=document.getElementById('modalCopy');
+    b.textContent='✓ Copied!';setTimeout(()=>b.textContent='📋 Copy Prompt',1200);};
   modal.classList.add('show');
 }
 
@@ -331,16 +360,17 @@ function render(){
   let shown=0;
   DATA.columns.forEach(c=>{
     const info=DATA._cols[c];if(!info)return;
-    const {col,stack}=info;let n=0;
+    const{col,stack}=info;let n=0;
+    // Cluster filter: if a cluster is selected, only show that cluster's column
+    const okCluster=!activeCluster||activeCluster===c;
     stack.querySelectorAll('.card').forEach(card=>{
       const p=card._p;
       const okText=!query||card._hay.includes(query);
       const okTags=activeTags.size===0||[...activeTags].every(t=>p.tags.includes(t));
-      // Mode filter
       let okMode=true;
-      if(filterMode==='text') okMode=!card._isImg;
-      if(filterMode==='image') okMode=card._isImg;
-      const ok=okText&&okTags&&okMode;
+      if(filterMode==='text')okMode=!card._isImg;
+      if(filterMode==='image')okMode=card._isImg;
+      const ok=okText&&okTags&&okMode&&okCluster;
       card.classList.toggle('hide',!ok);
       if(ok){n++;shown++;}
     });
@@ -348,25 +378,26 @@ function render(){
     col.classList.toggle('hide',n===0);
   });
   document.getElementById('count').textContent=shown+' shown';
+  // Update sidebar counts live
+  navList.querySelectorAll('.nav-item[data-col]').forEach(item=>{
+    const c=item.dataset.col;const info=DATA._cols[c];if(!info)return;
+    let n=0;info.stack.querySelectorAll('.card:not(.hide)').forEach(()=>n++);
+    // actually recount properly
+    n=info.stack.querySelectorAll('.card').length;
+    let vis=0;info.stack.querySelectorAll('.card:not(.hide)').forEach(()=>vis++);
+    item.querySelector('.nav-count').textContent=vis;
+  });
 }
 
 function applyView(){
   if(viewMode==='grid'){
-    board.className='grid-view';
-    // Move all visible cards into the board directly
-    board.innerHTML='';
-    DATA._allCards.forEach(card=>{
-      board.appendChild(card);
-    });
-    render();
-  } else {
-    // Rebuild kanban
-    buildBoard();
-    board.className='kanban';
-    render();
-  }
+    board.className='grid-view';board.innerHTML='';
+    DATA._allCards.forEach(card=>board.appendChild(card));render();
+  }else{buildBoard();board.className='kanban';render();}
 }
 
+function mk(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function slugify(s){return s.replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').toLowerCase();}
 function esc(s){if(!s)return'';return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 </script>
 </body>
